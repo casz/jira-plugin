@@ -1,0 +1,6 @@
+unclassified:
+  jira:
+    sites:
+      - url: "http://jira.com"
+
+      - url: "https://issues.jenkins-ci.org"

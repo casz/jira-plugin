@@ -4,12 +4,11 @@ import hudson.Extension;
 import hudson.model.Job;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
-import hudson.util.CopyOnWriteList;
 import hudson.util.PersistedList;
+import java.util.List;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -31,9 +30,9 @@ public class JiraProjectProperty extends JobProperty<Job<?, ?>> {
     public JiraProjectProperty(String siteName) {
         if (siteName == null) {
             // defaults to the first one
-            JiraSite[] sites = DESCRIPTOR.getSites();
-            if (sites.length > 0) {
-                siteName = sites[0].getName();
+            List<JiraSite> sites = DESCRIPTOR.getSites();
+            if (sites.size() > 0) {
+                siteName = sites.get(0).getName();
             }
         }
         this.siteName = siteName;
@@ -45,10 +44,10 @@ public class JiraProjectProperty extends JobProperty<Job<?, ?>> {
      * @return null if the configuration becomes out of sync.
      */
     public JiraSite getSite() {
-        JiraSite[] sites = DESCRIPTOR.getSites();
-        if (siteName == null && sites.length > 0) {
+        List<JiraSite> sites = DESCRIPTOR.getSites();
+        if (siteName == null && sites.size() > 0) {
             // default
-            return sites[0];
+            return sites.get(0);
         }
 
         for (JiraSite site : sites) {
@@ -69,7 +68,7 @@ public class JiraProjectProperty extends JobProperty<Job<?, ?>> {
 
     @Symbol("jira")
     public static final class DescriptorImpl extends JobPropertyDescriptor {
-        public final PersistedList<JiraSite> sites = new PersistedList<>(this);
+        public List<JiraSite> sites = new PersistedList<>(this);
 
         public DescriptorImpl() {
             super(JiraProjectProperty.class);
@@ -87,16 +86,16 @@ public class JiraProjectProperty extends JobProperty<Job<?, ?>> {
             return Messages.JiraProjectProperty_DisplayName();
         }
 
-        /**
-         * @deprecated use {@link #sites} directly to configure Jira sites, as PersistedList will notify owner on changes.
-         */
-        @Deprecated
-        public void setSites(JiraSite site) {
+            /**
+             * @deprecated use {@link #sites} directly to configure Jira sites, as PersistedList will notify owner on changes.
+             */
+            @Deprecated
+            public void setSites(JiraSite site) {
             sites.add(site);
         }
 
-        public JiraSite[] getSites() {
-            return sites.toArray(new JiraSite[0]);
+        public List<JiraSite> getSites() {
+            return sites;
         }
 
         @Override

@@ -96,16 +96,6 @@ class JiraSiteTest extends Specification {
         3 * jfp.getSites() >>> [null, [] as JiraSite[], [site2, site1] as JiraSite[]]
         0 * _._
         result==site2
-
-        when: "site is configured globally"
-        JiraProjectProperty.DESCRIPTOR.setSites(site2)
-        result = JiraSite.get(job)
-
-        then:
-        1 * job.getProperty(JiraProjectProperty.class) >> null
-        1 * job.getParent() >> nonFolderParent
-        0 * _._
-        result==site2
     }
 
 

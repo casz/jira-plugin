@@ -10,6 +10,8 @@ import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl;
 
 import hudson.util.Secret;
 import hudson.util.XStream2;
+import io.jenkins.plugins.casc.ConfigurationAsCode;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -156,6 +158,14 @@ public class JiraSite2Test {
         assertEquals(exampleOrg, site1.url);
         assertNull(site1.credentials);
         assertNull(site1.credentialsId);
+    }
+
+    @Test
+    public void should_support_configuration_as_code() throws Exception {
+        ConfigurationAsCode.get().configure(
+            JiraSite2Test.class.getResource("configuration-as-code.yml").toString());
+        List<JiraSite> sites = JiraProjectProperty.DESCRIPTOR.getSites();
+        assertEquals(2, sites.size());
     }
 
     private static class JiraSiteOld extends JiraSite {

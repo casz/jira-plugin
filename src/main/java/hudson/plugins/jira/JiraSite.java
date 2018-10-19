@@ -764,9 +764,9 @@ public class JiraSite extends AbstractDescribableImpl<JiraSite> {
 
         // none is explicitly configured. try the default ---
         // if only one is configured, that must be it.
-        JiraSite[] sites = JiraProjectProperty.DESCRIPTOR.getSites();
-        if (sites.length == 1) {
-            return sites[0];
+        List<JiraSite> sites = JiraProjectProperty.DESCRIPTOR.getSites();
+        if (sites.size() == 1) {
+            return sites.get(0);
         }
 
         return null;
